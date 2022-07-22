@@ -12,21 +12,22 @@
     <tr>
       <th>ID</th>
       <th>Имя</th>
-      <th>Фамилия</th>
-      <th>Возраст</th>
+      <th>Пароль</th>
+      <th>eMail</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="user1 : ${users}">
       <td th:text="${user1.getId()}"> </td>
-      <td th:text="${user1.getFirstName()}"> </td>
-      <td th:text="${user1.getLastName()}"></td>
-      <td th:text="${user1.getAge()}"></td>
+      <td th:text="${user1.getUsername()}"> </td>
+      <td th:text="${user1.getPassword()}"></td>
+      <td th:text="${user1.getEmail()}"></td>
+      <td th:text="${user1.getRoles()}"></td>
       <td>
-        <a th:href="@{{id}/update(id=${user1.getId()})}">Изменить</a>
+        <a th:href="@{/admin/update/{id}(id=${user1.getId()})}">Изменить</a>
       </td>
       <td>
-        <form th:method="DELETE" th:action="@{{id}/delete(id=${user1.getId()})}">
+        <form th:method="DELETE" th:action="@{/admin/delete/{id}(id=${user1.getId()})}">
           <input type="submit" value="Удалить"/>
         </form>
       </td>
@@ -36,6 +37,11 @@
 </div>
 <url value="/new" var="new_user"></url>
 <br/>
-<a href="/new">Создать пользователя</a>
+<a href="/admin/new">Создать пользователя</a>
+<br/>
+<br/>
+<form th:action="@{/logout}" method="post">
+  <input type="submit" value="Выйти"/>
+</form>
 </body>
 </html>

@@ -5,17 +5,22 @@
   <title>Изменение</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/{id}/updateUser (id =${user.getId()})}" th:object="${user}">
-  <label for="firstName">Изменить имя: </label>
-  <input type="text" th:field="*{firstName}" id="firstName"/>
+<form th:method="PATCH" th:action="@{/admin/update/{id} (id =${user.getId()})}" th:object="${user}">
+  <label for="username">Изменить имя: </label>
+  <input type="text" th:field="*{username}" id="username"/>
   <br/>
-  <label for="lastName">Изменить фамилию: </label>
-  <input type="text" th:field="*{lastName}" id="lastName"/>
+  <label for="password">Изменить пароль: </label>
+  <input type="text" th:field="*{password}" id="password"/>
   <br/>
-  <label for="age">Изменить Возраст: </label>
-  <input type="text" th:field="*{age}" id="age"/>
+  <label for="email">Изменить eMail: </label>
+  <input type="text" th:field="*{email}" id="email"/>
   <br/>
   <input type="submit" value="Изменить!"/>
+</form>
+<br/>
+<br/>
+<form th:action="@{/logout}" method="post">
+  <input type="submit" value="Выйти"/>
 </form>
 </body>
 </html>

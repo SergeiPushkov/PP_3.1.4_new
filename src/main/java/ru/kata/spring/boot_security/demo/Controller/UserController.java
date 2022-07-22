@@ -6,8 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.Service.UserServiceImp;
-import ru.kata.spring.boot_security.demo.model.User;
 
+import java.security.Principal;
 
 @Controller
 public class UserController {
@@ -18,39 +18,44 @@ public class UserController {
         this.userServiceImp = userServiceImp;
     }
 
-    @GetMapping("/users")
-    public String sayUsers(Model model) {
-        model.addAttribute("users", userServiceImp.findAll());
-        return "users";
+    @GetMapping("/")
+    public String sayHome() {
+        return "index";
     }
 
-    @GetMapping("/new")
-    public String newUser(Model model) {
-        model.addAttribute("new_user", new User());
-        return "new";
+    @GetMapping("/user")
+    public String sayUsers(Principal principal,Model model) {
+        model.addAttribute("user",userServiceImp.findByUsername(principal.getName()));
+        return "user";
     }
 
-    @PostMapping("/users")
-    public String create(@ModelAttribute("user") User user) {
-        userServiceImp.saveUser(user);
-        return "redirect:/users";
-    }
-
-    @GetMapping("{id}/update")
-    public String updateUser(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userServiceImp.findById(id));
-        return "update";
-    }
-
-    @PostMapping("{id}/updateUser")
-    public String updateUsers(@ModelAttribute("user") User user) {
-        userServiceImp.saveUser(user);
-        return "redirect:/users";
-    }
-
-    @PostMapping("{id}/delete")
-    public String deleteUser(@PathVariable("id") Long id) {
-        userServiceImp.deleteById(id);
-        return "redirect:/users";
-    }
+//    @GetMapping("/new")
+//    public String newUser(Model model) {
+//        model.addAttribute("new_user", new User());
+//        return "new";
+//    }
+//
+//    @PostMapping("/users")
+//    public String create(@ModelAttribute("user") User user) {
+//        userServiceImp.saveUser(user);
+//        return "redirect:/users";
+//    }
+//
+//    @GetMapping("{id}/update")
+//    public String updateUser(@PathVariable("id") Long id, Model model) {
+//        model.addAttribute("user", userServiceImp.findById(id));
+//        return "update";
+//    }
+//
+//    @PostMapping("{id}/updateUser")
+//    public String updateUsers(@ModelAttribute("user") User user) {
+//        userServiceImp.saveUser(user);
+//        return "redirect:/users";
+//    }
+//
+//    @PostMapping("{id}/delete")
+//    public String deleteUser(@PathVariable("id") Long id) {
+//        userServiceImp.deleteById(id);
+//        return "redirect:/users";
+//    }
 }

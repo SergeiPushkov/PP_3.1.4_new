@@ -6,17 +6,22 @@
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/users}" th:object="${new_user}">
-  <label for="firstName">Введите Ваше Имя:</label>
-  <input type="text" th:field="*{firstName}" id="firstName"/>
+<form th:method="POST" th:action="@{/admin/users}" th:object="${new_user}">
+  <label for="username">Введите Имя:</label>
+  <input type="text" th:field="*{username}" id="username"/>
   <br/>
-  <label for="lastName">Введите Вашу Фамилию:</label>
-  <input type="text" th:field="*{lastName}" id="lastName"/>
+  <label for="password">Введите пароль:</label>
+  <input type="text" th:field="*{password}" id="password"/>
   <br/>
-  <label for="age">Введите Ваш Возраст:</label>
-  <input type="text" th:field="*{age}" id="age"/>
+  <label for="email">Введите eMail:</label>
+  <input type="text" th:field="*{email}" id="email"/>
   <br/>
   <input type = "submit" value = "Создать"/>
+</form>
+<br/>
+<br/>
+<form th:action="@{/logout}" method="post">
+  <input type="submit" value="Выйти"/>
 </form>
 </body>
 </html>
