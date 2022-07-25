@@ -1,11 +1,11 @@
-package ru.kata.spring.boot_security.demo.Controller;
+package ru.kata.spring.boot_security.demo.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.Service.UserServiceImp;
+import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 import ru.kata.spring.boot_security.demo.model.User;
 
 
@@ -32,11 +32,10 @@ public class AdminController {
     @GetMapping("/new")
     public String newUser(Model model) {
         model.addAttribute("new_user", new User());
-//        model.addAttribute("new_role", new Role());
         return "new";
     }
 
-    @PostMapping("/users")
+    @PostMapping("/new")
     public String create(@ModelAttribute("user") User user) {
         userServiceImp.saveRole(user);
         return "redirect:/admin/users";
@@ -45,14 +44,12 @@ public class AdminController {
     @GetMapping("/update/{id}")
     public String updateUser(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userServiceImp.findById(id));
-        System.out.println(userServiceImp.findById(id));
         return "update";
     }
 
     @PatchMapping("/update/{id}")
     public String updateUsers(@ModelAttribute("user") User user) {
-        userServiceImp.saveUser(user);
-        System.out.println(user);
+        userServiceImp.saveRole(user);
         return "redirect:/admin/users";
     }
 

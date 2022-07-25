@@ -3,8 +3,8 @@ package ru.kata.spring.boot_security.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.kata.spring.boot_security.demo.Repository.RoleRepository;
-import ru.kata.spring.boot_security.demo.Service.UserServiceImp;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
+import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
@@ -31,6 +31,7 @@ public class AutoRegisterUser {
 
         User user_admin = new User("admin","admin", "admin@mail.ru");
         User user_user = new User("user", "user", "user@mail.ru");
+        
 
         user_admin.setRoles(List.of(role_admin,role_user));
         user_user.setRoles(List.of(role_user));
