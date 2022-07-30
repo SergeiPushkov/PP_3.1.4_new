@@ -17,7 +17,6 @@ import java.util.List;
 
 
 @Service
-@Transactional
 public class UserServiceImp implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -42,7 +41,7 @@ public class UserServiceImp implements UserService {
     }
 
 
-
+    @Transactional
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
