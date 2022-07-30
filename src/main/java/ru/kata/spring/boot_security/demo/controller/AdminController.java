@@ -2,11 +2,15 @@ package ru.kata.spring.boot_security.demo.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 import ru.kata.spring.boot_security.demo.model.User;
+
+import java.security.Principal;
 
 
 @Controller
@@ -18,38 +22,34 @@ public class AdminController {
     @Autowired
     public AdminController(UserServiceImp userServiceImp) {
         this.userServiceImp = userServiceImp;
-
     }
 
 
 
     @GetMapping("/users")
-    public String sayUsers(Model model) {
+    public String sayUsers(Model model, Principal principal) {
+        User user = new User();
         model.addAttribute("users", userServiceImp.findAll());
+        model.addAttribute("userNav", userServiceImp.findByUsername(principal.getName()));
+        model.addAttribute("roleSet", userServiceImp.getAllRoles());
+        model.addAttribute("user", user);
+        System.out.println(userServiceImp.findByUsername(principal.getName()));
         return "users";
     }
 
-    @GetMapping("/new")
-    public String newUser(Model model) {
-        model.addAttribute("new_user", new User());
-        return "new";
-    }
-
     @PostMapping("/new")
-    public String create(@ModelAttribute("user") User user) {
-        userServiceImp.saveRole(user);
+    public String create(@ModelAttribute("new_user") User user , @RequestParam(value = "role") String role) {
+        user.setRoles(userServiceImp.findByRoleName(role));
+        userServiceImp.saveUser(user);
         return "redirect:/admin/users";
     }
 
-    @GetMapping("/update/{id}")
-    public String updateUser(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userServiceImp.findById(id));
-        return "update";
-    }
 
     @PatchMapping("/update/{id}")
-    public String updateUsers(@ModelAttribute("user") User user) {
-        userServiceImp.saveRole(user);
+    public String updateUsers(@PathVariable("id") Long id ,@ModelAttribute("user") User user, @RequestParam(value = "role") String role) {
+        user = userServiceImp.findById(id);
+        user.setRoles(userServiceImp.findByRoleName(role));
+        userServiceImp.saveUser(user);
         return "redirect:/admin/users";
     }
 

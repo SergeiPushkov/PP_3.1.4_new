@@ -1,8 +1,5 @@
 package ru.kata.spring.boot_security.demo.service;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,6 +11,8 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,11 +22,13 @@ public class UserServiceImp implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
     @Autowired
-    public UserServiceImp(UserRepository userRepository, RoleRepository roleRepository, @Lazy PasswordEncoder passwordEncoder) {
+    public UserServiceImp(@Lazy PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
+
     }
 
     public User findById(Long id) {
@@ -48,7 +49,6 @@ public class UserServiceImp implements UserService {
     }
 
 
-
     public void deleteById(long id) {
         userRepository.deleteById(id);
     }
@@ -59,12 +59,19 @@ public class UserServiceImp implements UserService {
     }
 
 
+    public List<Role> getAllRoles() {
+        return roleRepository.findAll();
+    }
 
-    public void saveRole(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        List<Role> roleSet = List.of(roleRepository.getById(2L));
-        user.setRoles(roleSet);
-        userRepository.save(user);
+    @Override
+    public List<Role> findByRoleName(String role) {
+        List<Role> roles = new ArrayList<>();
+        for (Role roleName : getAllRoles()) {
+            if (role.contains(roleName.getName())) {
+                roles.add(roleName);
+            }
+        }
+        return roles;
     }
 
 

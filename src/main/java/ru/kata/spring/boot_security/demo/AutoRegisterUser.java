@@ -29,8 +29,8 @@ public class AutoRegisterUser {
         roleRepository.save(role_admin);
         roleRepository.save(role_user);
 
-        User user_admin = new User("admin","admin", "admin@mail.ru");
-        User user_user = new User("user", "user", "user@mail.ru");
+        User user_admin = new User("admin","admin", "admin@mail.ru",25);
+        User user_user = new User("user", "user", "user@mail.ru",20);
         
 
         user_admin.setRoles(List.of(role_admin,role_user));
