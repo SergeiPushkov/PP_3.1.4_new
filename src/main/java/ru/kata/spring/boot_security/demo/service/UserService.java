@@ -23,4 +23,5 @@ public interface UserService extends UserDetailsService {
     List<Role> findByRoleName(String role);
 
     List<Role> getAllRoles();
+
 }
