@@ -41,11 +41,26 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     public void saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        System.out.println(user);
+        System.out.println(user);
+        System.out.println(user);
+        System.out.println(user);
+        System.out.println(user);
+        System.out.println(user);
+        System.out.println(user);
+        System.out.println(user);
+        if(user.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         userRepository.save(user);
     }
 
+    @Override
+    @Transactional
+    public void update(User upUser) {
 
+        userRepository.save(upUser);
+    }
 
     public void deleteById(long id) {
         userRepository.deleteById(id);
@@ -60,6 +75,7 @@ public class UserServiceImp implements UserService {
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
+
 
     @Override
     public List<Role> findByRoleName(String role) {
