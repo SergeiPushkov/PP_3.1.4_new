@@ -12,7 +12,7 @@ formDeleteModal.addEventListener("submit", event => {
 
 function deleteUserById() {
     let request = new XMLHttpRequest();
-    request.open("DELETE", "http://localhost:8080/api/" + idUserDelete);
+    request.open("DELETE", "http://localhost:8080/api/users/delete/" + idUserDelete);
     request.setRequestHeader("Content-type", "application/jason; charset=utf-8");
     request.send()
 

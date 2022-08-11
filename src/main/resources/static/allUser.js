@@ -1,9 +1,9 @@
-const myUrl = "http://localhost:8080/api"
+const myUrl = "http://localhost:8080/api/users"
 
 const postsList = document.getElementById("data");// get list by class
 
 // хранилище где будет список постов
-let state = {
+const state = {
     users: []
 }
 

@@ -7,6 +7,7 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService extends UserDetailsService {
     User findById(Long id);
@@ -21,12 +22,12 @@ public interface UserService extends UserDetailsService {
 
     UserDetails loadUserByUsername(String username);
 
-    List<Role> findByRoleName(String role);
+    Set<Role> findByRoleName(String role);
 
-    List<Role> getAllRoles();
+    Set<Role> getAllRoles();
 
     void update(User upUser);
 
-
+//    Set<Role> addRole(DopUser dopUser,User user);
 
 }

@@ -9,7 +9,8 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class AutoRegisterUser {
@@ -24,17 +25,22 @@ public class AutoRegisterUser {
 
     @PostConstruct
     void AutoSaveUser() {
+        Set<Role> adminRole = new HashSet<>();
+        Set<Role> userRole = new HashSet<>();
         Role role_admin = new Role(1L,"ROLE_ADMIN");
         Role role_user = new Role(2L,"ROLE_USER");
         roleRepository.save(role_admin);
         roleRepository.save(role_user);
+        adminRole.add(role_admin);
+        adminRole.add(role_user);
+        userRole.add(role_user);
 
-        User user_admin = new User("admin","admin", "admin@mail.ru",25);
-        User user_user = new User("user", "user", "user@mail.ru",20);
+        User user_admin = new User("admin","admin",25,"admin@mail.ru");
+        User user_user = new User("user", "user", 20, "user@mail.ru");
         
 
-        user_admin.setRoles(List.of(role_admin,role_user));
-        user_user.setRoles(List.of(role_user));
+        user_admin.setRoles(adminRole);
+        user_user.setRoles(userRole);
 
         userServiceImp.saveUser(user_admin);
         userServiceImp.saveUser(user_user);

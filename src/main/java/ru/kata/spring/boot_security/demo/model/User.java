@@ -1,12 +1,13 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
+
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name = "users")
@@ -16,7 +17,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "username",unique = true)
     private String username;
 
     @Column(name = "password")
@@ -25,35 +26,36 @@ public class User implements UserDetails {
     @Column(name = "age")
     private int age;
 
-    @Column(name = "email")
+    @Column(name = "email",unique = true)
     private String email;
-    @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id" )
             , inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles;
+    private Set<Role> roles;
 
 
     public User() {
     }
 
-    public User(String username, String password, String email, int age) {
+    public User(String username, String password,int age ,String email) {
         this.username = username;
         this.password = password;
-        this.email = email;
         this.age = age;
+        this.email = email;
+
+
     }
 
-    public User(String username, String password, String email, int age,List<Role> roles) {
+    public User(String username, String password,int age ,String email,Set<Role> roles) {
         this.username = username;
         this.password = password;
-        this.email = email;
         this.age = age;
+        this.email = email;
         this.roles = roles;
     }
 
-    public User(Long id, String username, String password, int age, String email, List<Role> roles) {
+    public User(Long id, String username, String password,int age ,String email, Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -94,11 +96,11 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
@@ -109,6 +111,7 @@ public class User implements UserDetails {
     public void setAge(int age) {
         this.age = age;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -141,7 +144,9 @@ public class User implements UserDetails {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", age=" + age +
                 ", email='" + email + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }

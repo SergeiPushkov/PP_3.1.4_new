@@ -1,12 +1,14 @@
 package ru.kata.spring.boot_security.demo.controller;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.kata.spring.boot_security.demo.form.DopUser;
-import ru.kata.spring.boot_security.demo.model.Role;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
-import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
+
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api")
@@ -17,56 +19,31 @@ public class AdminRestController {
         this.userServiceImp = userServiceImp;
     }
 
-    @GetMapping()
-    public List<User> getAllUsers() {
-        return userServiceImp.findAll();
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return new ResponseEntity<>(userServiceImp.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("{id}")
-    public User getUserById(@PathVariable("id") Long id) {
-        return userServiceImp.findById(id);
-
+    @GetMapping("/users/get/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(userServiceImp.findById(id),HttpStatus.OK);
     }
 
-    @PutMapping()
-    public String editUser(@RequestBody DopUser user) {
-        List<Role> roles = addRole(user,new User());
-        User user1 = new User(user.getId(),user.getUsername(),user.getPassword(),user.getAge(),user.getEmail(),roles);
-        if(user1.getPassword() != null) {
-            user1.setPassword(user1.getPassword());
-        }
-        userServiceImp.update(user1);
-        return "OK";
+    @PutMapping("/users/edit")
+    public ResponseEntity<User> editUser(@RequestBody User user) {
+        userServiceImp.update(user);
+       return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
-    @PostMapping()
-    public String createUser(@RequestBody DopUser user) {
-        List<Role> roles = addRole(user,new User());
-        User user1 = new User(user.getId(),user.getUsername(),user.getPassword(),user.getAge(),user.getEmail(),roles);
-
-        userServiceImp.saveUser(user1);
-        return "OK";
+    @PostMapping("/users/new")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        userServiceImp.saveUser(user);
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
-    public String deleteUser(@PathVariable("id") Long id) {
+    @DeleteMapping("/users/delete/{id}")
+    public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
         userServiceImp.deleteById(id);
-        return "Ok"+ id + "deleted";
-    }
-
-
-    public List<Role> addRole(DopUser dopUser,User user) {
-        List<Role> roles = new ArrayList<>();
-        Role role = new Role(1L,"ROLE_ADMIN");
-        Role role2 = new Role(2L,"ROLE_USER");
-        if(dopUser.getRoles().contains(role.getName())) {
-            roles.add(role);
-            roles.add(role2);
-            user.setRoles(List.of(role,role2));
-        } else {
-            roles.add(role2);
-            user.setRoles(List.of(role2));
-        }
-        return roles;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

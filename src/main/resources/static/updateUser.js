@@ -1,21 +1,32 @@
 const formEditAddUser = document.getElementById('formEditUser')
-
 let idEditUser;
 let editUserName;
 let editPassword;
 let editAge;
 let editEmail;
-let editRoles;
+
+
+
+
+let currentRole = [];
 
 formEditAddUser.addEventListener('submit', event => {
     event.preventDefault();
-    // присваиваем значение айди пользователя
     idEditUser = document.getElementById('id').value
     editUserName = document.getElementById('username').value
     editPassword = document.getElementById('password').value
     editAge = document.getElementById('age').value
     editEmail = document.getElementById('email').value
-    editRoles = document.getElementById('editRole').value
+    const formData = new FormData(formEditAddUser);
+    formData.forEach((value, key) =>
+        {
+            if(key === "editRole") {
+                currentRole.push({name:value})
+                console.log(currentRole)
+            }
+        }
+    )
+
 
     let user = {
         id: idEditUser,
@@ -23,7 +34,7 @@ formEditAddUser.addEventListener('submit', event => {
         password: editPassword,
         age: editAge,
         email: editEmail,
-        roles: editRoles
+        roles: currentRole
     }
 
     console.log(user)
@@ -31,13 +42,12 @@ formEditAddUser.addEventListener('submit', event => {
     editUser(user)
         .then(() => reStart());
 
-    // alert('user - ' + firstName + ' ' + lastName + ' added')
+    currentRole.length = 0;
 
 })
 
-// отправляем данные юзера на сервер
 function editUser(user) {
-    return fetch(myUrl, {
+    return fetch(myUrl + "/edit", {
         method: 'PUT',
         headers: {
             "Content-type": "application/json; charset=UTF-8"
