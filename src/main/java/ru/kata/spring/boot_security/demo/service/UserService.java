@@ -2,7 +2,6 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.kata.spring.boot_security.demo.form.DopUser;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
@@ -28,6 +27,5 @@ public interface UserService extends UserDetailsService {
 
     void update(User upUser);
 
-//    Set<Role> addRole(DopUser dopUser,User user);
 
 }

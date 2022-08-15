@@ -7,16 +7,15 @@
           integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-dark bg-dark">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark text-white">
     <div class="container-fluid">
+            <span sec:authorize="isAuthenticated()">
+            <span class="text-uppercase fw-bold" sec:authentication="name"></span>
+                with roles: <span sec:authentication="principal.authorities"></span>
+            </span>
         <div>
-            <span class="navbar-text text-white font-weight-bold" th:text="${user.getEmail()}"></span>
-            <span class="navbar-text text-white">with roles:</span>
-            <span class="navbar-text text-white" th:text="${user.getRoles()}"></span>
+            <a class="btn btn-dark" th:href="@{/sign-in}">Logout</a>
         </div>
-        <form th:action="@{/sign-in}" method="post">
-            <button type="submit" class="btn btn-dark">Logout</button>
-        </form>
     </div>
 </nav>
 
@@ -51,19 +50,14 @@
                             <th>Роль</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr th:each="user1 : ${user}">
-                            <td th:utext="${user1.getId()}"></td>
-                            <td th:utext="${user1.getUsername()}"></td>
-                            <td th:utext="${user1.getEmail()}"></td>
-                            <td th:utext="${user1.getAge()}"></td>
-                            <td th:utext="${user1.getRoles()}"></td>
-                        </tr>
+                    <tbody id="dataUser">
+
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+<script src="/user.js"></script>
 </body>
 </html>

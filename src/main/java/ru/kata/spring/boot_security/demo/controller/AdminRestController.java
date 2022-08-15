@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
+import java.security.Principal;
 import java.util.List;
 
 
@@ -19,6 +20,15 @@ public class AdminRestController {
         this.userServiceImp = userServiceImp;
     }
 
+
+    @GetMapping("/user")
+    public ResponseEntity<User> sayUsers(Principal principal) {
+        System.out.println(principal);
+        System.out.println(principal);
+        System.out.println(principal);
+        System.out.println(principal);
+        return new ResponseEntity<>(userServiceImp.findByUsername(principal.getName()),HttpStatus.OK);
+    }
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         return new ResponseEntity<>(userServiceImp.findAll(), HttpStatus.OK);
@@ -46,4 +56,5 @@ public class AdminRestController {
         userServiceImp.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }
