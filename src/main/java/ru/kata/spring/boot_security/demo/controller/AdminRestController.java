@@ -23,10 +23,6 @@ public class AdminRestController {
 
     @GetMapping("/user")
     public ResponseEntity<User> sayUsers(Principal principal) {
-        System.out.println(principal);
-        System.out.println(principal);
-        System.out.println(principal);
-        System.out.println(principal);
         return new ResponseEntity<>(userServiceImp.findByUsername(principal.getName()),HttpStatus.OK);
     }
     @GetMapping("/users")
