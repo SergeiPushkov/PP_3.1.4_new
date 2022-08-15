@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Все пользователи</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script>
+        function show(shown, hidden) {
+            document.getElementById(shown).style.display = 'block';
+            document.getElementById(hidden).style.display = 'none';
+            return false;
+        }
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark text-white">
+    <div class="container-fluid">
+            <span sec:authorize="isAuthenticated()">
+            <span class="text-uppercase fw-bold" sec:authentication="name"></span>
+                with roles: <span sec:authentication="principal.authorities"></span>
+            </span>
+        <div>
+            <a class="btn btn-dark" th:href="@{/sign-in}">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid bg-light">
+
+    <div class="row">
+        <!-- left-panel -->
+        <div class="col-2 bg-white pt-3 px-0">
+            <div class="container-fluid bg-white">
+                <ul class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+                    <li class="nav-item">
+                        <a href="/users" class="nav-link active">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/user" class="nav-link">User</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- left-panel -->
+
+
+        <!-- Admin panel -->
+        <div class="col-10" style="background-color:#fafafa ;">
+            <div class="container-fluid" id="showUsers">
+                <br>
+                <h1>Admin panel</h1>
+                <br>
+                <div>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" onclick="return show('showUsers','addUser');">Users Table</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="return show('addUser','showUsers');">New user</a>
+                        </li>
+                    </ul>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя</th>
+                        <th>Возраст</th>
+                        <th>eMail</th>
+                        <th>Роль</th>
+                        <th>Изменить</th>
+                        <th>Удалить</th>
+                    </tr>
+                    </thead>
+                    <tbody id="data">
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal fade" id="editModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <form id="formEditUser">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Изменение юзера</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <!-- Modal body -->
+                            <div class="modal-body text-center">
+                                <div>
+                                    <div class="modal-id mx-sm-3">
+                                        <label class="fw-bold" for="id">ID</label>
+                                        <input readonly type="number" name="id" class="form-control" id="id">
+                                    </div>
+                                    <br>
+                                    <div class="modal-username mx-sm-3">
+                                        <label class="fw-bold" for="username">Имя</label>
+                                        <input type="text" name="username" class="form-control" id="username">
+                                    </div>
+                                    <br>
+                                    <div class="modal-password mx-sm-3">
+                                        <label class="fw-bold" for="password">Пароль</label>
+                                        <input readonly type="password" name="password" class="form-control" id="password">
+                                    </div>
+                                    <br>
+                                    <div class="modal-age mx-sm-3">
+                                        <label class="fw-bold" for="age">Возраст</label>
+                                        <input type="number" name="age" class="form-control" id="age">
+                                    </div>
+                                    <br>
+                                    <div class="modal-email mx-sm-3">
+                                        <label class="fw-bold" for="email">Email</label>
+                                        <input type="email" name="email" class="form-control" id="email">
+                                    </div>
+                                    <br>
+                                    <label class="fw-bold mx-sm-3" for="editRole">Роль</label>
+                                    <select name="editRole" size="2" class="form-select" id="editRole"
+                                            multiple aria-label="Default select">
+                                        <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                                        <option value="ROLE_USER">ROLE_USER</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Edit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade modal-delete" id="deleteModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <form class="formDeleteModal">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Удаление юзера</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body text-center">
+                                <div>
+                                    <div class="modal-id-del mx-sm-3">
+                                        <label class="fw-bold" for="del-id">ID</label>
+                                        <input name="del-id" readonly type="number" class="form-control" id="del-id">
+
+                                    </div>
+                                    <br>
+                                    <div class="modal-username-del mx-sm-3">
+                                        <label class="fw-bold" for="del-username">Имя</label>
+                                        <input readonly type="text" class="form-control" id="del-username">
+
+                                    </div>
+                                    <br>
+                                    <div class="modal-password-del mx-sm-3">
+                                        <label class="fw-bold" for="del-password">Пароль</label>
+                                        <input readonly type="text" class="form-control" id="del-password"
+                                               placeholder="Password">
+                                    </div>
+                                    <br>
+                                    <div class="modal-age-del mx-sm-3">
+                                        <label class="fw-bold" for="del-age">Возраст</label>
+                                        <input readonly type="number" class="form-control" id="del-age">
+
+                                    </div>
+                                    <br>
+                                    <div class="modal-email-del mx-sm-3">
+                                        <label class="fw-bold" for="eMail">Email</label>
+                                        <input readonly type="email" class="form-control" id="del-eMail">
+
+                                    </div>
+                                    <br>
+                                    <label class="fw-bold" for="del-editRole">Роль</label>
+                                    <select name="del-editRole" multiple size="2" class="form-select" id="del-editRole"
+                                            aria-label="Default select">
+                                        <option disabled value="1">ADMIN</option>
+                                        <option disabled value="2">USER</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger" data-bs-dismiss="modal"
+                                        id="btn-delete-user">
+                                    Delete
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid" id="addUser" style="display: none">
+                <br>
+                <h1>Admin panel</h1>
+                <br>
+                <div>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="return show('showUsers','addUser');">Users Table</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" onclick="return show('addUser','showUsers');">New user</a>
+                        </li>
+                    </ul>
+                </div>
+                <div role="tabpanel" class="text-center" id="add_user" >
+                    <table class="table table-striped bg-white text-center">
+                        <thead>
+                        <tr>
+                            <td colspan="8" class="fw-bold fs-5 bg-light">Add new user</td>
+                        </tr>
+                        </thead>
+                    </table>
+
+                    <form class="addForm">
+                        <!-- Modal body -->
+                        <div class="card-body text-center">
+                                <div class="card-username">
+                                    <label class="fw-bold" for="new-username">Имя</label>
+                                    <input type="text" name="new-username" class="form-control" id="new-username">
+                                </div>
+                                <br>
+                                <div class="card-password mx-sm-3">
+                                    <label class="fw-bold" for="new-password">Пароль</label>
+                                    <input type="text" name="new-password" class="form-control" id="new-password">
+
+                                </div>
+                                <br>
+                                <div class="card-age">
+                                    <label class="fw-bold" for="new-age">Возраст</label>
+                                    <input type="number" name="mew-age" class="form-control" id="new-age">
+
+                                </div>
+                                <br>
+                                <div class="card-email">
+                                    <label class="fw-bold" for="new-eMail">Email</label>
+                                    <input type="email" name="new-email" class="form-control" id="new-eMail">
+                                </div>
+                                <br>
+                                <label class="fw-bold" for="new-Role">Роль</label>
+                                <select name="new-Role" size="2" class="form-select"
+                                        id="new-Role"
+                                        multiple aria-label="Default select" required>
+                                    <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                                    <option value="ROLE_USER">ROLE_USER</option>
+                                </select>
+                        </div>
+                        <div class="container text-center">
+                            <button type="submit" class="btn btn-success">Add new user</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+
+<script src="/allUser.js"></script>
+<script src="/deleteModal.js"></script>
+<script src="/deleteUser.js"></script>
+<script src="/newUser.js"></script>
+<script src="/updateModal.js"></script>
+<script src="/updateUser.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+</body>
+</html>
